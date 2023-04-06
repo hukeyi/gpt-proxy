@@ -46,10 +46,10 @@ function setPrompt(prompt) {
 
 /**
  * Try to get response from gpt model "Friend Chat"
- * @param {*} prompt user's latest text
- * @returns
+ * @param {*} prompt user's latest text, e.g. "Hi!"
+ * @returns response from "Friend Chat"
  */
-async function getFriendResponse(prompt) {
+async function getFriendResponseByLatestText(prompt) {
 	setPrompt(prompt);
 
 	if (!checkTokenLength(options.prompt, max_length)) {
@@ -63,6 +63,26 @@ async function getFriendResponse(prompt) {
 	return await openai.createCompletion(options);
 }
 
+/**
+ * Try to get response from gpt model "Friend Chat"
+ * @param {*} prompt the whole dialogue text, e.g. "You: Hi!\nFriend:Hello!\nYou: Hi!\nFriend:"
+ * @returns response from "Friend Chat"
+ */
+async function getFriendResponse(prompt) {
+	prompt = prompt.trim();
+	if (prompt.length < 7 || prompt.substring(prompt.length - 7) != 'Friend:') {
+		console.log(prompt);
+		console.log(prompt.substring(prompt.length - 7));
+		return Promise.reject({
+			message: 'Wrong format for prompt. ',
+		});
+	}
+
+	options.prompt = prompt;
+	return await openai.createCompletion(options);
+}
+
 module.exports = {
 	getFriendResponse,
+	getFriendResponseByLatestText,
 };
