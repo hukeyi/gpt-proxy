@@ -21,8 +21,10 @@ router.post('/friend', async function (req, res, next) {
 		const prompt = req.body.prompt.trim();
 		const response = await getFriendResponse(prompt);
 		const output = response.data.choices[0].text.trim();
+		const totalTokens = response.data.usage.total_tokens;
 		return res.status(200).json({
 			output,
+			totalTokens,
 		});
 	} catch (err) {
 		// // reach the token length limit
