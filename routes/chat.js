@@ -3,6 +3,11 @@ var router = express.Router();
 
 const { getFriendResponse } = require('../controllers/friendChat');
 
+router.post('/', function (req, res, next) {
+	return res.status(404).json({
+		message: 'Wrong api url. ',
+	});
+});
 router.post('/friend', async function (req, res, next) {
 	// Client needs to send the whole dialogue text to server
 	// "You: Hi!\nFriend:" <-- send like this
